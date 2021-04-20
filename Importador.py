@@ -1,6 +1,6 @@
 import json
 
-import Conexao_mdb
+import ConexaoMariaDB
 # from models import Informacao
 from utils import get_dict_taxas_atuais, apenas_digitos, buscar_endereco_por_cep, moeda, ingles_para_portugues
 
@@ -27,8 +27,8 @@ class Importador():
 
             nome = valor['Nome completo'].split(" ", 1)[0]
             sobrenome = valor['Nome completo'].split(" ", 1)[1]
-            rg = valor['RG']
-            cpf = valor['CPF']
+            rg = apenas_digitos(valor['RG'])
+            cpf =  apenas_digitos(valor['CPF'])
             data_aniversario = pd.to_datetime(valor['Data de aniversário'], unit='ms').to_pydatetime()
 
             cep = valor['CEP']
@@ -39,27 +39,31 @@ class Importador():
             localidade = dict_endereco.get('localidade', '')
             uf = dict_endereco.get('uf', '')
 
-            dinheiro_real = moeda(valor['Dinheiro'], 'real')
-            dinheiro_dolar = moeda(valor['Dinheiro'] / taxa_dolar_em_reais, 'dolar')
+            dinheiro_real = valor['Dinheiro']
+            dinheiro_dolar = valor['Dinheiro'] / taxa_dolar_em_reais
 
             profissao = ingles_para_portugues(str(df_dados_complementares[posicao]['department']))
             mercado = ingles_para_portugues(str(df_dados_complementares[posicao]['market']))
 
             salario_dolar = df_dados_complementares[posicao]['wage']
+
+
             if salario_dolar is None:
-                salario_dolar = moeda(0.0, 'dolar')
-                salario_real = moeda(0.0, 'real')
+                salario_dolar =0.0
+                salario_real = 0.0
 
             else:
-                salario_real = moeda(float(salario_dolar.replace('$', '')) * taxa_dolar_em_reais, 'real')
-
+                salario_dolar = float(df_dados_complementares[posicao]['wage'].replace('$', ''))
+                salario_real = salario_dolar * taxa_dolar_em_reais
 
             tupla = (nome, sobrenome, rg, cpf, data_aniversario.date(), logradouro, complemento, bairro,
                  localidade, uf, cep, dinheiro_real, dinheiro_dolar, profissao, mercado, salario_real, salario_dolar)
 
             informacao.append(tupla)
             print(count)
-        Conexao_mdb.insert_tabela(informacao)
+
+            print(tupla)
+        ConexaoMariaDB.insert_tabela(informacao)
         print('Importação concluída com sucesso!')
 
             ###Falta colocar ou tirar as maskaras
