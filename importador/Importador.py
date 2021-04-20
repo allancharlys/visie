@@ -62,7 +62,6 @@ class Importador():
             informacao.append(tupla)
             print(count)
 
-            print(tupla)
         ConexaoMariaDB.insert_tabela(informacao)
         print('Importação concluída com sucesso!')
 
