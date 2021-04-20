@@ -1,4 +1,4 @@
-from Importador import Importador
+from importador.Importador import Importador
 
 
 class Executar(object):

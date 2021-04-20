@@ -1,8 +1,8 @@
 import json
 
-import ConexaoMariaDB
+from conexao_banco import ConexaoMariaDB
 # from models import Informacao
-from utils import get_dict_taxas_atuais, apenas_digitos, buscar_endereco_por_cep, moeda, ingles_para_portugues
+from importador.utils import get_dict_taxas_atuais, apenas_digitos, buscar_endereco_por_cep, ingles_para_portugues
 
 
 class Importador():
