@@ -3,15 +3,15 @@ import MySQLdb
 import sys
 
 try:
-    conn = MySQLdb.connect(host="localhost",
-                           user="root",
-                           passwd="mysql",
-                           db="allanramos")
+    conn = MySQLdb.connect(host="jobs.visie.com.br",
+                           user="allanramos",
+                           passwd="c6ed7d5ae0c0a5ca6be17706afcffd0f",
+                           db="allanramos",
+                           port=3306)
 except MySQLdb.Error as e:
     print(f"Erro ao conectar à plataforma MariaDB: {e}")
     sys.exit(1)
 
-# Get Cursor
 cursor = conn.cursor()
 
 
@@ -33,3 +33,4 @@ def insert_tabela(informacao):
 
 
 criar_tabela()
+
